@@ -1,18 +1,21 @@
 # =============================================================================
 # Code printed in the manuscript
 # Aryal et al. 'dendRoAnalyst 2.0: an expanded R package for preprocessing,
-# integrating, modeling, and analyzing dendrometer with climate time series'
+# integrating, modeling, and analyzing dendrometer data with climate time series'
 #
 # All code blocks are reproduced in the order in which they appear in the paper.
 # They use the example datasets included in the package (nepa17, gf_nepa17,
-# ktm_clim_hourly). Lines that need a user's own file path are commented out
-# and marked with '# [user file]'.
-# Requires dendRoAnalyst >= 2.0.0.
+# ktm_clim_hourly; Nepal Standard Time, UTC+05:45). Lines that need a user's
+# own file path are commented out and marked with '# [user file]'.
+# Requires dendRoAnalyst >= 2.0.1 (until it is on CRAN, install it from
+# package/dendRoAnalyst_2.0.1.tar.gz; see README). The two wavelet analyses
+# with 1000 simulations run for a long time; reduce n_sim for a quick test.
 # =============================================================================
 
 
 # ---- 2.3. Data import and temporal standardization -------------------------
 
+set.seed(1)  # reproducible jitter and random null distributions
 library(dendRoAnalyst)
 # import dendrometer data
 # dm_raw <- read.dendrometer("path/to/dendrometer_file.csv", tz = "UTC")  # [user file]
@@ -292,7 +295,7 @@ head(m_det)
 ev_fit <- dm.growth.evaluate(
   df = dm_na_fill,
   TreeNum = 1:2,
-  methods = c("gompertz", "richards", "loess", "double_gompertz"),
+  methods = c("gompertz", "richards", "loess", "gam"),
   year_mode = "yearly",
   verbose = FALSE
 )
@@ -321,25 +324,48 @@ plot(mc, type = "facet")
 
 wv <- dm_wavelet(
   x = dm_na_fill,
-  TreeNum = 1:2,
-  source = "raw",
+  TreeNum = 1,
+  source = "first_diff",
   make_pval = TRUE,
+  method = "AR",
+  n_sim = 1000,
+  n_cores = 4,
   verbose = FALSE
 )
 
 plot(wv)
 
+# extract or remove a diurnal band
+rec_extract <- dm_wavelet_reconstruct(
+  wv,
+  mode = "extract",
+  lower_hours = 20,
+  upper_hours = 28,
+  only_sig = TRUE
+)
+
+rec_remove <- dm_wavelet_reconstruct(
+  wv,
+  mode = "remove",
+  lower_hours = 20,
+  upper_hours = 28,
+  only_sig = TRUE
+)
+
 wc <- dm_wavelet_coherence(
   dm = dm_na_fill,
   clim = clim_hourly,
   TreeNum = 1,
-  clim_vars = c("temp", "VPD"),
-  source = "raw",
+  clim_vars = "temp",
+  source = "first_diff",
   dm_fun = "mean",
-  clim_funs = c(temp = "mean", VPD = "mean"),
+  clim_funs = c(temp = "mean"),
   loess_span = 0,
+  upperPeriod = 720,
   make.pval = TRUE,
-  n.sim = 10,
+  method = "AR",
+  n.sim = 1000,
+  n_cores = 4,
   verbose = FALSE
 )
 

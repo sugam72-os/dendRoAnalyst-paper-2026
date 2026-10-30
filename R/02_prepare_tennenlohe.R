@@ -1,9 +1,13 @@
 # =============================================================================
 # Tennenlohe example: import, preprocessing, and analysis objects
 # Creates output/tennenlohe_objects.RData, which is used by the figure scripts.
-# Data: four Pinus sylvestris trees (T1-T4), 30-min dendrometer records,
-#       2022-01-30 to 2023-10-19; hourly climate of the DWD station Nuremberg (ID 3668).
-# Requires dendRoAnalyst >= 2.0.0. Run from the repository root.
+# Data: four Pinus sylvestris trees (T1-T4), band dendrometers (DRL26, EMS Brno;
+#       stem circumference), 30-min records, 2022-01-30 to 2023-10-19; hourly
+#       climate of the DWD station Nuremberg (ID 3668). Both datasets are in UTC
+#       (no daylight saving time).
+# Requires dendRoAnalyst >= 2.0.1 (until it is on CRAN, install it from
+# package/dendRoAnalyst_2.0.1.tar.gz; see README). Run from the repository root.
+# The two wavelet analyses with 1000 simulations take most of the run time.
 # =============================================================================
 library(dendRoAnalyst)
 invisible(Sys.setlocale("LC_TIME", "English"))
@@ -63,10 +67,17 @@ mc <- mov.cor.dm(df = dm_na_fill, Clim = clim_day, TreeNum = 1, win_size = 21, d
                  clim_fun = c(temp_mean = "raw", VPD_mean = "raw", prec_sum = "sum"),
                  lag_days = c(temp_mean = 0, VPD_mean = 0, prec_sum = 1),
                  accum_days = c(temp_mean = 1, VPD_mean = 1, prec_sum = 7))
-wv <- dm_wavelet(x = dm_na_fill, TreeNum = 1, source = "raw", make_pval = TRUE, verbose = FALSE)
-wc <- dm_wavelet_coherence(dm = dm_na_fill, clim = clim_hourly, TreeNum = 1, clim_vars = c("temp", "VPD"),
-                           source = "raw", dm_fun = "mean", clim_funs = c(temp = "mean", VPD = "mean"),
-                           loess_span = 0, make.pval = TRUE, n.sim = 10, verbose = FALSE)
+# first-differenced dendrometer series; significance tested against red noise
+# (AR(1)) with 1000 Monte Carlo simulations, run in parallel on n_cores cores.
+# Coherence with air temperature (hourly; periods of 2 h to 30 days). With one
+# core, the coherence test takes about 2 days; reduce n_cores if needed.
+n_cores <- max(1, parallel::detectCores() - 1)
+wv <- dm_wavelet(x = dm_na_fill, TreeNum = 1, source = "first_diff", make_pval = TRUE,
+                 method = "AR", n_sim = 1000, n_cores = n_cores, verbose = FALSE)
+wc <- dm_wavelet_coherence(dm = dm_na_fill, clim = clim_hourly, TreeNum = 1, clim_vars = "temp",
+                           source = "first_diff", dm_fun = "mean", clim_funs = c(temp = "mean"),
+                           loess_span = 0, upperPeriod = 720, make.pval = TRUE, method = "AR",
+                           n.sim = 1000, n_cores = n_cores, verbose = FALSE)
 
 save(dm_raw, dm_jf, dm_na_fill, clim_hourly, clim_day, dd, sc, zg, ZG_clim, twd_out, twd_stats,
      ev, ep, ep_test, fit1, det1, ev_fit, mc, wv, wc, file = "output/tennenlohe_objects.RData")

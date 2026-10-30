@@ -59,7 +59,8 @@ Source of the climate data: Deutscher Wetterdienst (DWD), Climate Data Center (C
 
 ## Version history
 
-- **V1.1** (2026): updated to dendRoAnalyst 2.0.1 for the third revision of the manuscript. Wavelet analyses of first-differenced series with a red-noise null model and 1000 simulations, ABr shares calculated from `ABr.value.raw`, z-score detrending shown in Figure S5, new figure numbering (eight figures in the main text and eight in the Supplementary Material), and stem circumference in the axis labels.
+- **V1.2** (2026): updated to dendRoAnalyst 2.0.1 for the third revision of the manuscript. Wavelet analyses of first-differenced series with a red-noise null model and 1000 simulations, ABr shares calculated from `ABr.value.raw`, z-score detrending shown in Figure S5, new figure numbering (eight figures in the main text and eight in the Supplementary Material), and stem circumference in the axis labels.
+- **V1.1** (2026): incomplete upload of V1.2, in which the updated R scripts and the source package of dendRoAnalyst 2.0.1 are missing. Please use V1.2.
 - **V1.0** (2026): version for the second revision of the manuscript (dendRoAnalyst 2.0.0).
 
 ## References
