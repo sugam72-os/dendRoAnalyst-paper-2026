@@ -1,0 +1,9 @@
+output/*
+!output/.gitkeep
+.Rhistory
+.RData
+.Rproj.user/
+Rplots.pdf
+daily_dendrometer_climate.csv
+ZG_cycle_climate.csv
+SC_phase_subdaily_climate.csv

@@ -1,0 +1,36 @@
+{
+  "title": "dendRoAnalyst 2.0: an expanded R package for preprocessing, integrating, modeling, and analyzing dendrometer data with climate time series",
+  "upload_type": "software",
+  "description": "<p>Data and R code to reproduce the code examples, analyses, and figures of the manuscript \"dendRoAnalyst 2.0: an expanded R package for preprocessing, integrating, modeling, and analyzing dendrometer data with climate time series\" (Dendrochronologia, submitted). The repository contains the band dendrometer records of four Pinus sylvestris trees at Tennenlohe, Germany (2022 to 2023), hourly climate data of the DWD station Nuremberg, the R scripts, and the source package of dendRoAnalyst 2.0.1, which was used for the paper.</p>",
+  "creators": [
+    {
+      "name": "Aryal, Sugam",
+      "affiliation": "Friedrich-Alexander-Universität Erlangen-Nürnberg, Institut für Geographie"
+    },
+    {
+      "name": "Grießinger, Jussi",
+      "affiliation": "University of Salzburg, Department of Environment and Biodiversity"
+    },
+    {
+      "name": "Häusser, Martin",
+      "affiliation": "Friedrich-Alexander-Universität Erlangen-Nürnberg, Institut für Geographie"
+    },
+    {
+      "name": "Fan, Ze-Xin",
+      "affiliation": "Xishuangbanna Tropical Botanical Garden, Chinese Academy of Sciences"
+    },
+    {
+      "name": "Bräuning, Achim",
+      "affiliation": "Friedrich-Alexander-Universität Erlangen-Nürnberg, Institut für Geographie"
+    }
+  ],
+  "license": "cc-by-4.0",
+  "keywords": [
+    "dendrometer",
+    "dendRoAnalyst",
+    "R package",
+    "tree water deficit",
+    "stem diameter variation",
+    "climate-growth relationships"
+  ]
+}
